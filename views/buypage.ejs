@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <!DOCTYPE html>
     <html lang="en">
@@ -272,7 +269,7 @@
 
                         <div class="actions">
                             <span class="note">We will never share your details.</span>
-                            <button class="btn" type="submit">Place order</button>
+                            <button class="btn" id="placeOrderBtn" type="submit">Place order</button>
                         </div>
                     </form>
                 </div>
@@ -288,6 +285,23 @@
             </div>
         </div>
     </div>
+    <script>
+        // Replace button text with loader on submit
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.querySelector('form');
+            var btn = document.getElementById('placeOrderBtn');
+            if (form && btn) {
+                form.addEventListener('submit', function (e) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid #ff4fa8;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px"></span> Processing...';
+                });
+            }
+        });
+        // Simple spinner animation
+        var style = document.createElement('style');
+        style.innerHTML = '@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }';
+        document.head.appendChild(style);
+    </script>
 </body>
 
 </html>
