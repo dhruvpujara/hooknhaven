@@ -1,0 +1,39 @@
+.main-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    align-items: start;
+    background-image: url('../pictures/main.png');
+    background-size: cover;
+}
+
+.taglineContainer {
+    color: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-family: 'pacifico', cursive;
+    height: 75%;
+    width: 100%;
+    display: block;
+}
+
+.p1 {
+    font-size: 3.5rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.p2 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem;
+}

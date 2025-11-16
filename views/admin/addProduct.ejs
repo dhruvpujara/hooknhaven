@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Column</title>
+
+    <style>
+        /* ===== Base Styles (replicating Tailwind theme) ===== */
+        body {
+            background: linear-gradient(to bottom right, #111827, #000000, #111827);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid #1f2937;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .heading {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #374151;
+            background: rgba(31, 41, 55, 0.5);
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        input:hover {
+            border-color: #4b5563;
+        }
+
+        input:focus {
+            border-color: #ec4899;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+        }
+
+        button {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            color: white;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: scale(0.99);
+        }
+
+        .find-btn {
+            margin-top: 1.5rem;
+            border: 2px solid #ec4899;
+            background: transparent;
+            color: #ec4899;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .secondary-btn {
+            margin-top: 1.5rem;
+            border: 2px solid #ec4899;
+            background: transparent;
+            color: #ec4899;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .find-btn:hover {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            color: #fff;
+            transform: scale(0.99);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="heading">Create a Column</h1>
+
+            <form action="/admin/add-column" method="POST">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" placeholder="Enter column title" required>
+                </div>
+
+                <div>
+                    <label for="firstProductName">First Product Name</label>
+                    <input type="text" id="firstProductName" name="firstProductName" placeholder="Enter product name"
+                        required>
+                </div>
+
+                <div>
+                    <label for="firstProductImage">First Product Image Link</label>
+                    <input id="firstProductImage" name="firstProductImage" placeholder="Enter image URL" required>
+                </div>
+
+                <div>
+                    <label for="Price">First Product Price</label>
+                    <input type="number" id="firstProductImage" name="firstProductPrice" placeholder="Enter the Price"
+                        required>
+                </div>
+
+                <div>
+                    <label for="bio">First Product bio</label>
+                    <input id="biodata" name="biodata" placeholder="Enter biodata" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+
+            <button class="find-btn" onclick="window.location.href='/admin/find-Update'">Find and Update</button>
+
+            <button class="secondary-btn" onclick="window.location.href='/Products'">Back to Products Page</button>
+        </div>
+    </div>
+</body>
+
+</html>

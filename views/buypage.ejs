@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Checkout</title>
+        <style>
+            :root {
+                --bg1: #fff0f6;
+                /* pale pink */
+                --bg2: #ffd6ea;
+                /* soft pink */
+                --card: #fff6fb;
+                --accent: #ff4fa8;
+                /* bright pink */
+                --muted: #6b3653;
+            }
+
+            * {
+                box-sizing: border-box
+            }
+
+            html,
+            body {
+                height: 100%
+            }
+
+            body {
+                margin: 0;
+                font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
+                background: linear-gradient(180deg, var(--bg1), var(--bg2));
+                color: var(--muted);
+                -webkit-font-smoothing: antialiased
+            }
+
+            /* full page centered card */
+            .page {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 32px
+            }
+
+            .card {
+                width: 100%;
+                max-width: 920px;
+                background: linear-gradient(180deg, var(--card), #fff);
+                border-radius: 18px;
+                padding: 28px;
+                box-shadow: 0 18px 50px rgba(255, 77, 145, 0.12);
+                position: relative;
+                overflow: hidden
+            }
+
+            /* decorative circles */
+            .card::before,
+            .card::after {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.12
+            }
+
+            .card::before {
+                width: 360px;
+                height: 360px;
+                background: var(--accent);
+                right: -120px;
+                top: -120px
+            }
+
+            .card::after {
+                width: 220px;
+                height: 220px;
+                background: #ffd0ea;
+                left: -80px;
+                bottom: -80px
+            }
+
+            header {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                margin-bottom: 18px
+            }
+
+            .logo {
+                width: 68px;
+                height: 68px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #fff, #ffeaf4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 6px 20px rgba(255, 77, 145, 0.08);
+                font-weight: 700;
+                color: var(--accent)
+            }
+
+            h1 {
+                font-family: 'Great Vibes', cursive;
+                font-size: 2.6rem;
+                margin: 0;
+                color: var(--accent);
+                line-height: 1
+            }
+
+            p.lead {
+                margin: 6px 0 0;
+                color: #7a4867
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr 420px;
+                /* reduced gap to bring Place Order button and Need Help section closer */
+                gap: 16px;
+                align-items: start
+            }
+
+            /* left: form (full height) */
+            form {
+                background: transparent;
+                padding: 6px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px
+            }
+
+            .field {
+                display: flex;
+                flex-direction: column
+            }
+
+            label {
+                font-weight: 700;
+                color: #6b3653;
+                font-size: 0.95rem;
+                margin-bottom: 6px
+            }
+
+            input[type="text"],
+            input[type="tel"],
+            textarea {
+                padding: 14px;
+                border-radius: 12px;
+                border: 1px solid #ffd6ea;
+                background: #fff;
+                font-size: 1rem
+            }
+
+            input[type="text"]:focus,
+            input[type="tel"]:focus,
+            textarea:focus {
+                outline: none;
+                box-shadow: 0 6px 20px rgba(255, 77, 145, 0.08);
+                border-color: var(--accent)
+            }
+
+            textarea {
+                min-height: 130px;
+                resize: vertical
+            }
+
+            .meta {
+                background: linear-gradient(180deg, #fff, #fff8fb);
+                padding: 18px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 105, 180, 0.06)
+            }
+
+            .meta h3 {
+                margin: 0 0 8px
+            }
+
+            .price {
+                color: var(--accent);
+                font-weight: 800;
+                font-size: 1.15rem
+            }
+
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px
+            }
+
+            .note {
+                font-size: 0.9rem;
+                color: #8a5a73
+            }
+
+            .btn {
+                background: var(--accent);
+                color: #fff;
+                padding: 12px 20px;
+                border-radius: 12px;
+                border: none;
+                font-weight: 800;
+                cursor: pointer
+            }
+
+            @media(max-width:920px) {
+                .grid {
+                    grid-template-columns: 1fr
+                }
+
+                .card::before {
+                    display: none
+                }
+
+                .card::after {
+                    display: none
+                }
+            }
+
+            @media(max-width:420px) {
+                h1 {
+                    font-size: 2rem
+                }
+            }
+        </style>
+    </head>
+
+<body>
+    <div class="page">
+        <div class="card">
+            <header>
+                <div>
+                    <h1>Place your order</h1>
+                    <p class="lead">A few details and we'll get back to you to confirm shipping.</p>
+                </div>
+            </header>
+
+            <div class="grid">
+                <div>
+                    <form action="/Confirm-purchase" method="POST" novalidate>
+                        <input type="hidden" name="productName" value="<%= productName %>">
+                        <input type="hidden" name="productCollection" value="<%= productcollection %>">
+                        <div class="field">
+                            <label for="buyerName">Full name</label>
+                            <input id="buyerName" name="buyerName" type="text" placeholder="e.g. Priya Sharma" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="contactNumber">Contact number</label>
+                            <input id="contactNumber" name="contactNumber" type="tel" placeholder="e.g. +91 98765 43210"
+                                pattern="[0-9+\-\s]{7,}" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="address">Shipping address</label>
+                            <textarea id="address" name="address" placeholder="Street, City, Postal code, Country"
+                                required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="customize">Customize (optional)</label>
+                            <textarea id="customize" name="customize"
+                                placeholder="Add any customization requests, notes for the seller... (e.g. gift wrap, color preference)"></textarea>
+                        </div>
+
+                        <div class="actions">
+                            <span class="note">We will never share your details.</span>
+                            <button class="btn" type="submit">Place order</button>
+                        </div>
+                    </form>
+                </div>
+
+                <aside class="meta">
+                    <h3>Need help?</h3>
+                    <p>If you have questions about sizes, colors or shipping, reply to the confirmation email or call us
+                        at <strong>+91 80000 00000</strong>.</p>
+
+                    <h3 style="margin-top:16px">Order info</h3>
+                    <p class="price">We'll confirm final price & shipping after you submit.</p>
+                </aside>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

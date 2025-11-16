@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find & Update Column</title>
+
+    <style>
+        /* ===== Base Styles (dark gradient theme) ===== */
+        body {
+            background: linear-gradient(to bottom right, #111827, #000000, #111827);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid #1f2937;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .heading {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #374151;
+            background: rgba(31, 41, 55, 0.5);
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        input:hover {
+            border-color: #4b5563;
+        }
+
+        input:focus {
+            border-color: #ec4899;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+        }
+
+        button {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-btn {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            color: white;
+            width: 100%;
+        }
+
+        .main-btn:hover {
+            opacity: 0.9;
+            transform: scale(0.99);
+        }
+
+        .secondary-btn {
+            margin-top: 1.5rem;
+            border: 2px solid #ec4899;
+            background: transparent;
+            color: #ec4899;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .secondary-btn:hover {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            color: #fff;
+            transform: scale(0.99);
+        }
+
+        .divider {
+            height: 1px;
+            background: #1f2937;
+            margin: 2rem 0;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="heading">Find & Update Column</h1>
+
+            <!-- Search Form -->
+            <form id="searchForm" action="/admin/update-product" method="post">
+                <div>
+                    <label for="columnName">Enter Column Name</label>
+                    <input type="text" id="columnName" name="columnName" placeholder="Enter column name" required>
+                </div>
+
+                <div>
+                    <label for="type">add / delete</label>
+                    <input type="text" id="type" name="type" placeholder="add or delete ?" required>
+                </div>
+
+                <div>
+                    <label for="newProduct"> Product name </label>
+                    <input type="text" id="newProduct" name="newProduct" placeholder="Enter product name" required>
+                </div>
+
+
+                <div>
+                    <label for="productImage">Image Link</label>
+                    <input id="productImage" name="productImage" placeholder="Enter product image link">
+                </div>
+
+                <div>
+                    <label for="Price"> Product Price</label>
+                    <input type="number" id="firstProductImage" name="ProductPrice" placeholder="Enter the Price">
+                </div>
+
+                <div>
+                    <label for="bio">First Product bio</label>
+                    <input id="biodata" name="biodata" placeholder="Enter biodata">
+                </div>
+
+                <button type="submit" class="main-btn">Update Column</button>
+            </form>
+
+            <button class="secondary-btn" onclick="window.location.href='/admin/addProduct'">Back to Create
+                Page</button>
+
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= product && product.name ? product.name : 'Product' %> — Details
+    </title>
+    <link rel="stylesheet" href="/css/productsPage.css">
+    <style>
+        /* Pink-themed full-page styling with decorative elements */
+        /* Make sizing predictable and prevent horizontal viewport overflow */
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink-1: #fff0f6;
+            --pink-2: #ffd6ea;
+            --accent: #ff4fa8;
+            --muted: #5b3b48;
+            --card: rgba(255, 255, 255, 0.9);
+            --radius: 14px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+            background: linear-gradient(180deg, var(--pink-1), var(--pink-2));
+            color: var(--muted);
+            /* prevent accidental horizontal scroll from fixed/negative-offset elements */
+            overflow-x: hidden;
+        }
+
+        /* decorative background shapes */
+        .bg-blob {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            filter: blur(36px);
+            opacity: 0.12
+        }
+
+        .bg-blob.a {
+            width: 520px;
+            height: 520px;
+            right: -120px;
+            top: -140px;
+            background: radial-gradient(circle at 30% 30%, #ff8abf, #ffd6ea)
+        }
+
+        .bg-blob.b {
+            width: 360px;
+            height: 360px;
+            left: -100px;
+            bottom: -100px;
+            background: radial-gradient(circle at 60% 60%, #ff4fa8, #ffd6ea)
+        }
+
+        .product-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* reduced page padding to remove excess whitespace */
+            padding: 20px;
+            position: relative;
+        }
+
+        .product-card {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: 0 30px 60px rgba(183, 52, 108, 0.08);
+            overflow: visible;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* subtle corner accent */
+        .product-card:before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            right: -80px;
+            top: -60px;
+            background: linear-gradient(135deg, rgba(255, 79, 168, 0.08), rgba(255, 177, 214, 0.06));
+            pointer-events: none
+        }
+
+        .product-media {
+            background: linear-gradient(180deg, #fff, #fff6fb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* slightly reduced padding */
+            padding: 18px;
+            position: relative;
+            /* container for peek-kitty */
+            overflow: visible;
+        }
+
+        .img-wrap {
+            width: 100%;
+            height: 100%;
+            max-height: 620px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #fff, #fff)
+        }
+
+        .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        .product-info {
+            /* reduced internal padding to remove extra breathing room */
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px
+        }
+
+        .breadcrumbs {
+            font-size: 0.9rem;
+            color: rgba(91, 59, 72, 0.85)
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.15rem;
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px
+        }
+
+        .price {
+            font-size: 1.6rem;
+            color: var(--accent);
+            font-weight: 800
+        }
+
+        .price-small {
+            font-size: 0.95rem;
+            color: #8a5870
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #6b4a59
+        }
+
+        .actions {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(255, 79, 168, 0.16)
+        }
+
+        .meta-pill {
+            background: linear-gradient(90deg, #fff0f6, #fff);
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 105, 180, 0.08);
+            color: #84415b;
+            font-weight: 600
+        }
+
+        .placeholder {
+            width: 100%;
+            height: 420px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #ffe7f2, #fff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a86b87;
+            font-weight: 700
+        }
+
+        @media(max-width:980px) {
+            .product-card {
+                grid-template-columns: 1fr
+            }
+
+            .img-wrap {
+                max-height: 420px
+            }
+        }
+
+        @media(max-width:460px) {
+            h1 {
+                font-size: 1.5rem;
+                padding-right: 8px
+            }
+
+            .product-info {
+                padding: 18px
+            }
+        }
+
+        /* peek-kitty - decorative image that peeks from top of product-media */
+        /* NOTE: the page-level fixed left kitty is defined once below; avoid duplicate rules that can cause layout shifts */
+
+        @media(max-width:980px) {
+            .peek-left {
+                /* moved 20px to the right */
+                left: 20px;
+                transform: translateX(-22px);
+                bottom: -14px;
+                width: 140px
+            }
+        }
+
+        @media(max-width:480px) {
+            .peek-left {
+                /* moved 20px to the right */
+                left: 20px;
+                transform: translateX(-16px);
+                bottom: -8px;
+                width: 110px
+            }
+        }
+
+        @media(max-width:480px) {
+
+            /* keep kitty visible on phones, smaller and closer to the media */
+            .peek-kitty {
+                display: block;
+                right: 10px;
+                top: -16px;
+                width: 100px
+            }
+        }
+
+
+        .peek-kitty {
+            position: absolute;
+            top: -110px;
+            /* pulled upwards so the kitty peeks more from the top */
+            right: 8px;
+            /* align to the media's right edge */
+            width: 220px;
+            /* enlarged */
+            pointer-events: none;
+            z-index: 4;
+            /* above media content */
+            opacity: 0.98;
+            transform: translateY(0);
+            background: transparent;
+            /* no background from CSS side */
+            object-fit: contain;
+        }
+
+        @media(max-width:1100px) {
+            .peek-kitty {
+                width: 180px;
+                top: -98px;
+                right: 14px
+            }
+        }
+
+        @media(max-width:480px) {
+
+            /* visible on phones, slightly smaller and still peeking */
+            .peek-kitty {
+                display: block;
+                right: 10px;
+                top: -82px;
+                width: 140px
+            }
+        }
+
+        /* page-level bottom-left kitty (fixed to viewport) */
+        .peek-left {
+            position: fixed;
+            /* moved 20px to the right (was -28px) */
+            left: -38px;
+            /* peek slightly from outside the viewport */
+            bottom: -18px;
+            width: 160px;
+            pointer-events: none;
+            z-index: 5;
+            transform: translateY(0);
+        }
+
+        @media(max-width:980px) {
+            .peek-left {
+                /* moved 20px to the right (was -20px) */
+                left: 0px;
+                bottom: -14px;
+                width: 140px
+            }
+        }
+
+        @media(max-width:480px) {
+            .peek-left {
+                /* moved 20px to the right (was -12px) */
+                left: -38px;
+                bottom: -8px;
+                width: 110px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- page-level left-bottom kitty (fixed to viewport) -->
+    <img src="/pictures/22.png" alt="left-kitty" class="peek-left">
+    <div class="product-page">
+        <div class="product-card">
+            <% /* compute safe image src: absolute URLs kept, otherwise assume images live in /pictures */ %>
+                <% let imgSrc=null; if (product && product.image) { if (product.image.indexOf('http')===0) {
+                    imgSrc=product.image } else { imgSrc='/pictures/' + product.image } } %>
+
+                    <div class="product-media">
+                        <img src="/pictures/11.png" alt="kitty" class="peek-kitty">
+                        <div class="img-wrap">
+                            <% if (imgSrc) { %>
+                                <img src="<%= imgSrc %>"
+                                    alt="<%= product && product.name ? product.name : 'product image' %>">
+                                <% } else { %>
+                                    <div class="placeholder">No image available</div>
+                                    <% } %>
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <div class="breadcrumbs"><a href="/products"
+                                style="color:inherit;text-decoration:none;opacity:0.85">← Back to products</a></div>
+                        <h1>
+                            <%= product && product.name ? product.name : 'Untitled product' %>
+                        </h1>
+
+                        <div class="price-row">
+                            <div class="price">₹<%= product && (product.price !==undefined && product.price !==null) ?
+                                    product.price : 'N/A' %>
+                            </div>
+                            <div class="price-small">inclusive of taxes (if any)</div>
+                        </div>
+
+                        <div class="description">
+                            <%= product && product.description ? product.description
+                                : 'No description available for this product.' %>
+                        </div>
+
+                        <div class="actions">
+                            <a class="btn btn-primary" href="/buy/<%= product._id %>">Buy now</a>
+                            <div class="meta-pill">Free shipping over ₹999</div>
+                        </div>
+                    </div>
+                    <div class="bg-blob a"></div>
+                    <div class="bg-blob b"></div>
+        </div>
+    </div>
+</body>
+
+</html>
