@@ -7,7 +7,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 // local imports
-const port = 3000;
+const port = process.env.PORT || 3500;
 const userRoutes = require('./routes/UserRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const path = require('path');
