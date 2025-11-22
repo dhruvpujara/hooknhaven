@@ -97,20 +97,20 @@ module.exports.sendFormDataEmail = async (req, res) => {
             return res.status(500).json({ error: 'Email transporter not configured' });
         }
         const formData = req.body;
-
+        console.log("Form Data Received:", formData);
         const formattedData = Object.entries(formData)
             .map(([key, value]) => `${key}: ${value}`)
             .join("\n");
-
+        console.log("Formatted Data:", formattedData);
         const mailOptions = {
             from: `"Website Form" <${process.env.MY_EMAIL}>`,
             to: process.env.MY_EMAIL,
             subject: "New Form Submission",
             text: `New form submitted:\n\n${formattedData}`,
         };
-
+        console.log("Sending email with options:", mailOptions);
         await transporter.sendMail(mailOptions);
-
+        console.log("Email sent successfully");
         res.redirect('/OrderConfirmed');
     } catch (error) {
         console.log(error);
