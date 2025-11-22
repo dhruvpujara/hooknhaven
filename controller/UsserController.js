@@ -90,28 +90,37 @@ module.exports.buyProduct = async (req, res) => {
 
 module.exports.sendFormDataEmail = async (req, res) => {
     try {
-
         // defensive check: ensure transporter is a valid nodemailer transport
         if (!transporter || typeof transporter.sendMail !== 'function') {
             console.error('Email transporter is not configured correctly:', transporter);
             return res.status(500).json({ error: 'Email transporter not configured' });
         }
+
         const formData = req.body;
         console.log("Form Data Received:", formData);
+
         const formattedData = Object.entries(formData)
             .map(([key, value]) => `${key}: ${value}`)
             .join("\n");
         console.log("Formatted Data:", formattedData);
+
         const mailOptions = {
             from: `"Website Form" <${process.env.MY_EMAIL}>`,
             to: process.env.MY_EMAIL,
             subject: "New Form Submission",
             text: `New form submitted:\n\n${formattedData}`,
         };
+
         console.log("Sending email with options:", mailOptions);
         await transporter.sendMail(mailOptions);
         console.log("Email sent successfully");
-        res.redirect('/OrderConfirmed');
+
+        // FIX: Return JSON response instead of redirect for API calls
+        res.status(200).json({
+            success: true,
+            message: "Email sent successfully"
+        });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Email sending failed" });
