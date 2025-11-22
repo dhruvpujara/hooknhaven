@@ -11,5 +11,5 @@ Router.get('/OrderConfirmed', ussercontroller.getorderconfirmed);
 
 // Route for buying a specific product (shows buy/checkout page)
 Router.get('/buy/:_id', ussercontroller.buyProduct);
-Router.post('/Confirm-purchase', ussercontroller.sendFormDataEmail);
+Router.post('/Confirm-purchase', ussercontroller.addPurchase);
 module.exports = Router;

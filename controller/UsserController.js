@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('../model/productSchema');
 const transporter = require('../config/mailer.js');
+const Purchase = require('../model/purchaseSchema');
 
 const UniversalSchema = new mongoose.Schema({
     title: String,
@@ -88,45 +89,69 @@ module.exports.buyProduct = async (req, res) => {
 };
 
 
-module.exports.sendFormDataEmail = async (req, res) => {
-    try {
-        // defensive check: ensure transporter is a valid nodemailer transport
-        if (!transporter || typeof transporter.sendMail !== 'function') {
-            console.error('Email transporter is not configured correctly:', transporter);
-            return res.status(500).json({ error: 'Email transporter not configured' });
-        }
+// module.exports.sendFormDataEmail = async (req, res) => {
+//     try {
+//         // defensive check: ensure transporter is a valid nodemailer transport
+//         if (!transporter || typeof transporter.sendMail !== 'function') {
+//             console.error('Email transporter is not configured correctly:', transporter);
+//             return res.status(500).json({ error: 'Email transporter not configured' });
+//         }
 
-        const formData = req.body;
-        console.log("Form Data Received:", formData);
+//         const formData = req.body;
+//         console.log("Form Data Received:", formData);
 
-        const formattedData = Object.entries(formData)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join("\n");
-        console.log("Formatted Data:", formattedData);
+//         const formattedData = Object.entries(formData)
+//             .map(([key, value]) => `${key}: ${value}`)
+//             .join("\n");
+//         console.log("Formatted Data:", formattedData);
 
-        const mailOptions = {
-            from: `"Website Form" <${process.env.MY_EMAIL}>`,
-            to: process.env.MY_EMAIL,
-            subject: "New Form Submission",
-            text: `New form submitted:\n\n${formattedData}`,
-        };
+//         const mailOptions = {
+//             from: `"Website Form" <${process.env.MY_EMAIL}>`,
+//             to: process.env.MY_EMAIL,
+//             subject: "New Form Submission",
+//             text: `New form submitted:\n\n${formattedData}`,
+//         };
 
-        console.log("Sending email with options:", mailOptions);
-        await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully");
+//         console.log("Sending email with options:", mailOptions);
+//         await transporter.sendMail(mailOptions);
+//         console.log("Email sent successfully");
 
-        // FIX: Return JSON response instead of redirect for API calls
-        res.status(200).json({
-            success: true,
-            message: "Email sent successfully"
-        });
+//         // FIX: Return JSON response instead of redirect for API calls
+//         res.status(200).json({
+//             success: true,
+//             message: "Email sent successfully"
+//         });
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Email sending failed" });
-    }
-};
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ error: "Email sending failed" });
+//     }
+// };
 
 module.exports.getorderconfirmed = (req, res) => {
     res.render('OrderConfirmed');
 }
+
+
+module.exports.addPurchase = async (req, res) => {
+    try {
+        customize: String,
+            { productName, productCollection, buyerName, contactNumber, address, } = req.body
+
+        const newPurchase = new Purchase({
+            productName,
+            productCollection,
+            buyerName,
+            contactNumber,
+            address,
+        });
+
+        await newPurchase.save();
+        console.log('Purchase saved successfully:', newPurchase);
+        res.redirect('/OrderConfirmed');
+    }
+    catch (error) {
+        console.error('Error saving purchase:', error);
+        res.status(500).json({ error: 'Failed to record purchase' });
+    }
+};
