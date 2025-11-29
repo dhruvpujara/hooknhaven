@@ -13,8 +13,6 @@
             --pale-pink: #fff0f6;
             --dark-pink: #e83d93;
             --text-color: #6b3653;
-            --error-color: #e74c3c;
-            --success-color: #27ae60;
         }
 
         * {
@@ -163,14 +161,6 @@
             box-shadow: 0 0 0 3px rgba(255, 79, 168, 0.2);
         }
 
-        .form-control.error {
-            border-color: var(--error-color);
-        }
-
-        .form-control.success {
-            border-color: var(--success-color);
-        }
-
         .password-container {
             position: relative;
         }
@@ -190,34 +180,6 @@
 
         .toggle-password:hover {
             opacity: 1;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .password-strength {
-            margin-top: 5px;
-            font-size: 0.8rem;
-        }
-
-        .password-strength.weak {
-            color: var(--error-color);
-        }
-
-        .password-strength.medium {
-            color: #f39c12;
-        }
-
-        .password-strength.strong {
-            color: var(--success-color);
         }
 
         textarea.form-control {
@@ -243,13 +205,6 @@
             background: var(--dark-pink);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 79, 168, 0.3);
-        }
-
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         .login-link {
@@ -312,14 +267,12 @@
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" class="form-control"
                         placeholder="Enter your email address" required>
-                    <div class="error-message" id="emailError">Please enter a valid email address</div>
                 </div>
 
                 <div class="form-group">
                     <label for="contact">Contact Number</label>
                     <input type="tel" id="contact" name="contact" class="form-control"
                         placeholder="Enter your 10-digit phone number" pattern="[0-9]{10}" maxlength="10" required>
-                    <div class="error-message" id="contactError">Please enter a valid 10-digit phone number</div>
                 </div>
 
                 <div class="form-group">
@@ -331,8 +284,6 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <div class="error-message" id="passwordError">Password must be at least 6 characters long</div>
-                    <div class="password-strength" id="passwordStrength"></div>
                 </div>
 
                 <div class="form-group">
@@ -344,7 +295,6 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
                 </div>
 
                 <div class="form-group">
@@ -353,7 +303,7 @@
                         required></textarea>
                 </div>
 
-                <button type="submit" class="btn" id="submitBtn">Create Account</button>
+                <button type="submit" class="btn">Create Account</button>
 
                 <div class="login-link">
                     Already have an account? <a href="/login">Sign In</a>
@@ -395,268 +345,8 @@
             }
         });
 
-        // Validation functions
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        function isValidContact(contact) {
-            const contactRegex = /^\d{10}$/;
-            return contactRegex.test(contact);
-        }
-
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            if (password.length >= 6) strength++;
-            if (password.length >= 8) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-            return strength;
-        }
-
-        function updatePasswordStrength(password) {
-            const strengthElement = document.getElementById('passwordStrength');
-            const strength = checkPasswordStrength(password);
-
-            if (password.length === 0) {
-                strengthElement.textContent = '';
-                strengthElement.className = 'password-strength';
-                return;
-            }
-
-            if (strength <= 2) {
-                strengthElement.textContent = 'Weak password';
-                strengthElement.className = 'password-strength weak';
-            } else if (strength <= 4) {
-                strengthElement.textContent = 'Medium password';
-                strengthElement.className = 'password-strength medium';
-            } else {
-                strengthElement.textContent = 'Strong password';
-                strengthElement.className = 'password-strength strong';
-            }
-        }
-
-        function validateForm() {
-            const email = document.getElementById('email').value;
-            const contact = document.getElementById('contact').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            let isValid = true;
-
-            // Validate email
-            if (!isValidEmail(email)) {
-                document.getElementById('email').classList.add('error');
-                document.getElementById('emailError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('email').classList.remove('error');
-                document.getElementById('emailError').classList.remove('show');
-            }
-
-            // Validate contact number
-            if (!isValidContact(contact)) {
-                document.getElementById('contact').classList.add('error');
-                document.getElementById('contactError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('contact').classList.remove('error');
-                document.getElementById('contactError').classList.remove('show');
-            }
-
-            // Validate password
-            if (password.length < 6) {
-                document.getElementById('password').classList.add('error');
-                document.getElementById('passwordError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('password').classList.remove('error');
-                document.getElementById('passwordError').classList.remove('show');
-            }
-
-            // Validate confirm password
-            if (password !== confirmPassword) {
-                document.getElementById('confirmPassword').classList.add('error');
-                document.getElementById('confirmPasswordError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('confirmPassword').classList.remove('error');
-                document.getElementById('confirmPasswordError').classList.remove('show');
-            }
-
-            return isValid;
-        }
-
-        function resetValidation() {
-            // Remove all error states
-            const errorInputs = document.querySelectorAll('.form-control.error');
-            const errorMessages = document.querySelectorAll('.error-message.show');
-
-            errorInputs.forEach(input => input.classList.remove('error'));
-            errorMessages.forEach(message => message.classList.remove('show'));
-
-            // Reset password strength
-            document.getElementById('passwordStrength').textContent = '';
-            document.getElementById('passwordStrength').className = 'password-strength';
-        }
-
-        // Real-time validation
-        document.getElementById('email').addEventListener('input', function () {
-            if (this.value) {
-                if (isValidEmail(this.value)) {
-                    this.classList.remove('error');
-                    this.classList.add('success');
-                    document.getElementById('emailError').classList.remove('show');
-                } else {
-                    this.classList.remove('success');
-                    this.classList.add('error');
-                    document.getElementById('emailError').classList.add('show');
-                }
-            } else {
-                this.classList.remove('error', 'success');
-                document.getElementById('emailError').classList.remove('show');
-            }
-        });
-
-        document.getElementById('contact').addEventListener('input', function () {
-            // Remove non-digit characters
-            this.value = this.value.replace(/\D/g, '');
-
-            if (this.value) {
-                if (isValidContact(this.value)) {
-                    this.classList.remove('error');
-                    this.classList.add('success');
-                    document.getElementById('contactError').classList.remove('show');
-                } else {
-                    this.classList.remove('success');
-                    this.classList.add('error');
-                    document.getElementById('contactError').classList.add('show');
-                }
-            } else {
-                this.classList.remove('error', 'success');
-                document.getElementById('contactError').classList.remove('show');
-            }
-        });
-
-        document.getElementById('password').addEventListener('input', function () {
-            const password = this.value;
-            updatePasswordStrength(password);
-
-            if (password) {
-                if (password.length >= 6) {
-                    this.classList.remove('error');
-                    this.classList.add('success');
-                    document.getElementById('passwordError').classList.remove('show');
-                } else {
-                    this.classList.remove('success');
-                    this.classList.add('error');
-                    document.getElementById('passwordError').classList.add('show');
-                }
-            } else {
-                this.classList.remove('error', 'success');
-                document.getElementById('passwordError').classList.remove('show');
-            }
-
-            // Also validate confirm password when password changes
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            if (confirmPassword) {
-                if (password === confirmPassword) {
-                    document.getElementById('confirmPassword').classList.remove('error');
-                    document.getElementById('confirmPassword').classList.add('success');
-                    document.getElementById('confirmPasswordError').classList.remove('show');
-                } else {
-                    document.getElementById('confirmPassword').classList.remove('success');
-                    document.getElementById('confirmPassword').classList.add('error');
-                    document.getElementById('confirmPasswordError').classList.add('show');
-                }
-            }
-        });
-
-        document.getElementById('confirmPassword').addEventListener('input', function () {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-
-            if (confirmPassword) {
-                if (password === confirmPassword) {
-                    this.classList.remove('error');
-                    this.classList.add('success');
-                    document.getElementById('confirmPasswordError').classList.remove('show');
-                } else {
-                    this.classList.remove('success');
-                    this.classList.add('error');
-                    document.getElementById('confirmPasswordError').classList.add('show');
-                }
-            } else {
-                this.classList.remove('error', 'success');
-                document.getElementById('confirmPasswordError').classList.remove('show');
-            }
-        });
-
-        // Limit contact input to 10 digits
-        document.getElementById('contact').addEventListener('keypress', function (e) {
-            if (this.value.length >= 10 && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault();
-            }
-        });
-
-        // Form submission
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Validate form before submission
-            if (!validateForm()) {
-                return;
-            }
-
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-
-            // Show loading state
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-            submitBtn.disabled = true;
-
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                contact: document.getElementById('contact').value,
-                password: document.getElementById('password').value,
-                address: document.getElementById('address').value
-            };
-
-            // Send data to backend
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert('Account created successfully!');
-                    console.log('Response data:', data);
-                    // Reset the form
-                    this.reset();
-                    // Remove validation states
-                    resetValidation();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error creating account. Please try again.');
-                })
-                .finally(() => {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                });
-        });
+        // Remove all the complex JavaScript validation and form handling
+        // The form will submit normally via POST to /register
     </script>
 </body>
 

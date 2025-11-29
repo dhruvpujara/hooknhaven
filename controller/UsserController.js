@@ -160,7 +160,7 @@ module.exports.registerUser = async (req, res) => {
             username: name,
             contactNumber: contact,
             address,
-            password: password, // Default password for simplicity
+            password: password,
         });
         await newUser.save();
 
@@ -168,10 +168,14 @@ module.exports.registerUser = async (req, res) => {
         req.session.userId = newUser._id;
         console.log('User registered successfully:', newUser);
 
-        // const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-        // res.cookie('token', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 }); // 30 days
+        const user = await User.findById(req.session.userId);
 
-        res.redirect('/');
+        // Fix: Use === for comparison and add return statements
+        if (user.role === 'admin') {
+            return res.redirect('/adminHome');  // Add return here
+        }
+
+        return res.redirect('/');  // Add return here
     }
     catch (error) {
         console.error('Error registering user:', error);
