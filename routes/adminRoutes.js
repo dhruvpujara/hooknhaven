@@ -23,6 +23,7 @@ const isAdmin = async (req, res, next) => {
 Router.get('/admin/addProduct', isAdmin, adminController.getaddProduct);
 Router.get('/admin/find-Update', isAdmin, adminController.getupdateProduct);
 Router.get('/orderPanel', isAdmin, adminController.getorderPanel);
+Router.get('/adminHome', adminController.getAdminHome)
 
 
 // post method

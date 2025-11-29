@@ -121,6 +121,9 @@ module.exports.orderCompleted = async (req, res) => {
     res.redirect('/orderPanel'); // Add redirect after deletion
 }
 
+module.exports.getAdminHome = (req, res) => {
+    res.render('adminHome')
+}
 
 
 

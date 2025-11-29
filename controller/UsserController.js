@@ -205,6 +205,7 @@ module.exports.loginUser = async (req, res) => {
 
         req.session.isLoggedIn = true;
         req.session.userId = user._id;
+        console.log(user.role)
 
 
         if (user.role === 'admin') {
