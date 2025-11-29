@@ -205,9 +205,15 @@ module.exports.loginUser = async (req, res) => {
 
         req.session.isLoggedIn = true;
         req.session.userId = user._id;
-        console.log('User logged in successfully:', user);
 
-        res.redirect('/');
+
+        if (user.role === 'admin') {
+            return res.redirect('/adminHome')
+        } else {
+            return res.redirect('/')
+
+        }
+
     }
     catch (error) {
         console.error('Error logging in user:', error);
