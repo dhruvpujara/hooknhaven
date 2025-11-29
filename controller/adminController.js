@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Purchase = require('../model/purchaseSchema');
 
 const productSchema = new mongoose.Schema({
     name: String,
@@ -108,7 +109,17 @@ module.exports.postupdateProduct = async (req, res) => {
     };
 }
 
+module.exports.getorderPanel = async (req, res) => {
+    const orders = await Purchase.find()
+    res.render('ordersPanel', { orders: orders });
+}
 
+module.exports.orderCompleted = async (req, res) => {
+    const { orderId } = req.body;
+    const deletedOrder = await Purchase.findByIdAndDelete(orderId);
+    console.log(deletedOrder)
+    res.redirect('/orderPanel'); // Add redirect after deletion
+}
 
 
 

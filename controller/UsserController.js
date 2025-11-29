@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Product = require('../model/productSchema');
 const Purchase = require('../model/purchaseSchema');
+const User = require('../model/userSchema');
+const bcrypt = require('bcrypt');
 
 const UniversalSchema = new mongoose.Schema({
     title: String,
@@ -36,7 +38,7 @@ module.exports.getproducts = async (req, res) => {
         for (const coll of collections) {
             const collectionName = coll.name;
             if (collectionName === "purchases") continue; // Exclude purchases collection
-
+            if (collectionName === "users") continue;
             // Get a model for this collection
             const Model = getModelForCollection(collectionName);
 
@@ -82,10 +84,19 @@ module.exports.getproductdetails = async (req, res) => {
 };
 
 module.exports.buyProduct = async (req, res) => {
-    console.log(req.session.collection, req.session.productName);
+
     productcollection = req.session.collection;
     productName = req.session.productName;
-    res.render('buypage', { productcollection, productName });
+
+    const product = await Product.db.collection(productcollection).findOne({ name: productName });
+
+    const userId = req.session.userId;
+    if (!userId) {
+        return res.redirect('/login');
+    }
+    const userDetails = await User.findById(userId);
+
+    res.render('buypage', { product, productcollection, userDetails });
 };
 
 
@@ -97,8 +108,22 @@ module.exports.getorderconfirmed = (req, res) => {
 
 module.exports.addPurchase = async (req, res) => {
     try {
-        customize: String,
-            { productName, productCollection, buyerName, contactNumber, address, } = req.body
+        if (!req.session.isLoggedIn) {
+            return res.redirect('/login');
+        }
+
+        const userId = req.session.userId;
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const buyerName = user.username;
+        const contactNumber = user.contactNumber;
+        const address = user.address;
+
+        const { productName, productCollection, customize, quantity } = req.body;
 
         const newPurchase = new Purchase({
             productName,
@@ -106,6 +131,9 @@ module.exports.addPurchase = async (req, res) => {
             buyerName,
             contactNumber,
             address,
+            customize,
+            quantity,
+
         });
 
         await newPurchase.save();
@@ -115,5 +143,70 @@ module.exports.addPurchase = async (req, res) => {
     catch (error) {
         console.error('Error saving purchase:', error);
         res.status(500).json({ error: 'Failed to record purchase' });
+    }
+};
+
+module.exports.getregister = (req, res) => {
+    res.render('register');
+}
+
+module.exports.registerUser = async (req, res) => {
+    try {
+        const { name, contact, address, email, password } = req.body;
+        console.log('Registering user with data:', req.body);
+
+        const newUser = new User({
+            email: email,
+            username: name,
+            contactNumber: contact,
+            address,
+            password: password, // Default password for simplicity
+        });
+        await newUser.save();
+
+        req.session.isLoggedIn = true;
+        req.session.userId = newUser._id;
+        console.log('User registered successfully:', newUser);
+
+        // const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+        // res.cookie('token', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 }); // 30 days
+
+        res.redirect('/');
+    }
+    catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Failed to register user' });
+    }
+};
+
+module.exports.getlogin = (req, res) => {
+    res.render('login');
+}
+
+module.exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email: email, });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const hashedPassword = bcrypt.compare(user.password, password);
+
+        if (!hashedPassword) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        req.session.isLoggedIn = true;
+        req.session.userId = user._id;
+        console.log('User logged in successfully:', user);
+
+        res.redirect('/');
+    }
+    catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Failed to login user' });
     }
 };

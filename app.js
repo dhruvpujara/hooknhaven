@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require("express-session");
+const cookieParser = require('cookie-parser');
 
 // external imports
 const app = express();
@@ -18,6 +19,7 @@ const rootdir = __dirname;
 
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+app.use(cookieParser());
 
 app.set('views', [
     path.join(rootdir, 'views'),
