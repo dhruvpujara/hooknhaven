@@ -24,6 +24,7 @@ const getModelForCollection = (collectionName) => {
 
 
 module.exports.getaddProduct = (req, res) => {
+    console.log("jj")
     res.render('addProduct');
 }
 
@@ -53,7 +54,7 @@ module.exports.createCrochetCollection = async (req, res) => {
 
         await newProduct.save();
 
-        res.redirect('/admin/add-column');
+        res.redirect('/admin/addProduct');
 
 
     } catch (err) {

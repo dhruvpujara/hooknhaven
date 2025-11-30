@@ -1,4 +1,5 @@
 const Router = require('express').Router();
+const { CURSOR_FLAGS } = require('mongodb');
 const adminController = require('../controller/adminController');
 const User = require('../model/userSchema')
 
@@ -11,13 +12,14 @@ const isAdmin = async (req, res, next) => {
         return res.redirect('/login')
     }
 
-    const userId = req.session.id
-    const user = User.findById(userId)
+    const userId = req.session.userId
+    const user = await User.findById(userId)
 
-    const isAdmin = user.role === 'admin';
+    const isAdmin = user.role === "admin";
     if (!isAdmin) {
         res.redirect('/')
     }
+    next();
 }
 
 Router.get('/admin/addProduct', isAdmin, adminController.getaddProduct);
